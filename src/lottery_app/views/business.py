@@ -3,6 +3,7 @@ from django.views import View
 
 from django import forms
 
+
 class BusinessInfoForm(forms.Form):
     name = forms.CharField(label='business name')  # should use the TextInput widget
     description = forms.CharField(label='business description')
