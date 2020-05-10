@@ -1,28 +1,25 @@
 import attr
 
 import random
-import string
 
 
 @attr.s
 class StringCreator:
+    character_set = attr.ib(init=True)
     string_length = attr.ib(init=True, default=8)
 
     def build(self):
+        """Call this method to get a string of random letters, digits and symbols."""
         return self.digits_and_symbols(length=self.string_length)
 
     def digits_and_symbols(self, length=10):
-        """Call this method to get a string of random letters, digits and symbols."""
-        password_characters = string.ascii_letters + string.digits + string.punctuation
-        return ''.join(random.choice(password_characters) for i in range(length))
+        return ''.join(random.choice(Str.character_set) for i in range(length))
 
 
 @attr.s
 class CodeCreator:
-    length = attr.ib(init=True, converter=int)
-
+    builder = attr.ib(init=True)
     codes = attr.ib(init=True, default=set, converter=set)
-    builder = attr.ib(init=False, default=attr.Factory(lambda self: StringCreator(self.length), takes_self=True))
 
     def get_code(self):
         code = self._build_code()
@@ -40,17 +37,17 @@ class CodeCreator:
 
 @attr.s
 class CodeGenerator:
-    length = attr.ib(init=True)
+    builder = attr.ib(init=True)
     _nb_codes = attr.ib(init=True)
-    _seen_codes = attr.ib(init=True, default=set, converter=set)
-
-    builder = attr.ib(init=True, default=attr.Factory(lambda self: CodeCreator(self.length, self._seen_codes), takes_self=True))
-    _gen = attr.ib(init=False, default=None)
-    # _gen = attr.ib(init=False, default=attr.Factory(lambda self: iter(self.builder.get_code() for _ in range(self.length)), takes_self=True))
 
     @property
     def seen_codes(self):
         return self.builder.codes
+
+    @seen_codes.setter
+    def seen_codes(self, codes):
+        """Indicate codes that should be skipped if they happen to be generated"""
+        self.builder.codes = set(codes)
 
     @property
     def nb_codes(self):
@@ -63,11 +60,11 @@ class CodeGenerator:
         self._nb_codes = nb_codes
 
     def __iter__(self):
-        self._gen = iter(self.builder.get_code() for _ in range(self._nb_codes))
+        return iter(self.builder.get_code() for _ in range(self._nb_codes))
 
     @classmethod
-    def create(cls, code_legth, nb_codes, seen_codes=None):
+    def from_django_settings(cls, code_length, nb_codes, seen_codes=None):
+        from django.conf import settings
         if seen_codes is None:
-            seen_codes = []
-        return CodeGenerator(code_legth, nb_codes, CodeCreator(code))
-
+            seen_codes = set()
+        return CodeGenerator(CodeCreator(StringCreator(settings.PASSWORD_CHARACTERS, code_length), seen_codes), nb_codes)
