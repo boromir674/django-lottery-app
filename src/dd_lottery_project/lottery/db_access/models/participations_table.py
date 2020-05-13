@@ -7,16 +7,10 @@ from .base_model import BaseModel
 from lottery.utils import CodeGenerator
 
 
-class ParticipationsTable(BaseModel):
-
-    participation = models.ForeignKey(Participation, models.CASCADE)
-    competition = models.ForeignKey(Competition, models.CASCADE)
-
-
 class ParticipationsTableManager(models.Manager):
     code_generator = CodeGenerator.from_django_settings(6, 20, seen_codes=None)
 
-    def _particiaption(self, code):
+    def _participation(self, code):
         _ = Participation(code=code, state=0)
         _.save()
         return _
@@ -27,7 +21,14 @@ class ParticipationsTableManager(models.Manager):
         if not seen_codes:
             seen_codes = set()
         self.code_generator.seen_codes = seen_codes
-        participations = [self._particiaption(code) for code in iter(self.code_generator)]
+        participations = [self._participation(code) for code in iter(self.code_generator)]
         competition = Competition(name=name, begin_date='', end_date='', is_running=True, participations=participations)
         competition.save()
         return competition
+
+
+class ParticipationsTable(BaseModel):
+    objects = ParticipationsTableManager()  # attach custom manager (not a table field/column)
+
+    participation = models.ForeignKey(Participation, models.CASCADE)
+    competition = models.ForeignKey(Competition, models.CASCADE)

@@ -56,7 +56,7 @@ ROOT_URLCONF = 'dd_lottery_project.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates', # alt built-in: jinja2
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {

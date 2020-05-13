@@ -18,7 +18,6 @@ from django.urls import path, include
 
 # from .admin import lottery_admin
 
-
 urlpatterns = [
     path('dd_admin/', dj_admin.site.urls),
     path('', include('lottery.urls')),

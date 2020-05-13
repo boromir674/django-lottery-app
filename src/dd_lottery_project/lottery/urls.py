@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin as dj_admin
 from django.urls import path, include
 
+from .views.winner import CodeChecker
 
 urlpatterns = [
-    # path('', include('lottery.urls')),
+    path('', CodeChecker.as_view()),
+         # include('lottery.urls')),
     path('lot_admin/', dj_admin.site.urls),
 ]
