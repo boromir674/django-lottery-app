@@ -16,4 +16,3 @@ class ParticipationCodeForm(forms.Form):
 
     def cleaned_data(self):
         self.clean()
-

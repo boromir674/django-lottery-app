@@ -1,6 +1,6 @@
 from django.views import View
 
-from ..db_access.models.participations_table import ParticipationsTable
+from ..db_access.models.competition import Competition
 
 
 class CompetitionResource(View):
@@ -9,4 +9,5 @@ class CompetitionResource(View):
         pass
 
     def post(self, request, *args, **kwargs):
-        
+        Competition.objects.new_random()
+

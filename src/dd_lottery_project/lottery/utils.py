@@ -15,11 +15,30 @@ class StringCreator:
     def digits_and_symbols(self, length=10):
         return ''.join(random.choice(Str.character_set) for i in range(length))
 
+    @classmethod
+    def from_django_settings(cls, string_length):
+        from django.conf import settings
+        return StringCreator(settings.PASSWORD_CHARACTERS, string_length)
 
-@attr.s
+
 class CodeCreator:
-    builder = attr.ib(init=True)
-    codes = attr.ib(init=True, default=set, converter=set)
+    def __init__(self, builder, **kwargs):
+        self.builder = builder
+    # codes = attr.ib(init=True, default=set, converter=set)
+
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        """Possible optional keys: 'codes' and 'init'"""
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+            cls._instance.codes = set()
+        codes = kwargs.get('codes', [])
+        if codes:
+            if kwargs.get('init', False):
+                cls._instance.codes = codes
+            else:
+                cls._instance.codes.add(codes)
+        return cls._instance
 
     def get_code(self):
         code = self._build_code()
@@ -34,11 +53,35 @@ class CodeCreator:
             return _
         return None  # return None to indicate failure in case our builder happens to build a code already seen
 
+    @classmethod
+    def from_django_settings(cls, code_length, **kwargs):
+        """
+        :param int code_length:
+        :param kwargs: action1: if 'codes' and 'init'=True, sets seen_codes=kwargs['codes']; action2: if 'codes', updates seen_codes.add(kwargs['codes'])
+        :return:
+        """
+        return CodeCreator(StringCreator.from_django_settings(code_length), **kwargs)
+
+    @classmethod
+    def from_lottery_db(cls, code_length, participation_model, **kwargs):
+        """Initializes the singleton CodeCreator instance with the codes from the current db state and returns the object\n
+        :param kwargs: action1: if 'init'=False, then updates the potentially existant codes with the ones from the db. If 'init'=True or not in kwargs then sets the codes witht the ones from the db
+        """
+        return cls.from_django_settings(code_length,
+                                        codes=[p.code for p in participation_model.objects.all()],
+                                        init=kwargs.get('init', True))
+
 
 @attr.s
 class CodeGenerator:
     builder = attr.ib(init=True)
     _nb_codes = attr.ib(init=True)
+
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     @property
     def seen_codes(self):
@@ -73,8 +116,16 @@ class CodeGenerator:
         return iter(self.builder.get_code() for _ in range(self._nb_codes))
 
     @classmethod
-    def from_django_settings(cls, code_length, nb_codes, seen_codes=None):
-        from django.conf import settings
-        if seen_codes is None:
-            seen_codes = set()
-        return CodeGenerator(CodeCreator(StringCreator(settings.PASSWORD_CHARACTERS, code_length), seen_codes), nb_codes)
+    def from_django_settings(cls, code_length, nb_codes, **kwargs):
+        """
+        :param int code_length:
+        :param int nb_codes:
+        :param kwargs: action1: if 'codes' and 'init'=True, sets seen_codes=kwargs['codes']; action2: if 'codes', updates seen_codes.add(kwargs['codes'])
+        :return:
+        """
+        return CodeGenerator(CodeCreator.from_django_settings(code_length, **kwargs), nb_codes)
+
+    @classmethod
+    def from_lottery_db(cls, code_length, nb_codes, participation_model, **kwargs):
+        """Returns the singleton object by initializing the 'seen' codes with the ones in the db. Pass 'update'=True to update the 'seen' codes instead of overwrite."""
+        return CodeGenerator(CodeCreator.from_lottery_db(code_length, participation_model, init=not kwargs.get('update', False)), nb_codes)

@@ -4,7 +4,8 @@ from django.contrib import admin
 from .db_access.models import *
 from .db_access.models.participation import PARTICIPATION_STATES
 
-
+from django.http import HttpResponseRedirect
+from .forms.competition_form import CompetitionForm
 
 
 class CompetitionAdmin(admin.ModelAdmin):
@@ -22,15 +23,34 @@ class CompetitionAdmin(admin.ModelAdmin):
         _ = self.all(obj)
         if _ == 0:
             return '0.0%'
-        return '{:.2f}%'.format(100 * self.confirmed(obj) / float(_))
+        return '{:.1f}%'.format(100 * self.confirmed(obj) / float(_))
 
-    actions = ['']
+    actions = ['new_random']
 
-    def make_published(self, request, queryset):
-        ParticipationsTable.objects.new_random()
-        queryset.update(status='p')
+    def new_random(self, request, queryset):
+        form = CompetitionForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/competition')
 
-    make_published.short_description = "Mark selected stories as published"
+            # self.get(request, *args, **kwargs)
+            # if a GET (or any other method) we'll create a blank form
+        else:
+            return HttpResponseRedirect('/dd_admin')
+        #
+        #     form = ParticipationCodeForm()
+        # a = HttpResponseRedirect('/competition')
+        # for comp in queryset:
+        #     comp.add_random()
+        #     queryset.objects.new_random(status='p')
+
+    # make_published.short_description = "Mark selected stories as published"
+    # actions = ['']
+    #
+    # def make_published(self, request, queryset):
+    #     ParticipationsTable.objects.new_random()
+    #     queryset.update(status='p')
+    #
+    # make_published.short_description = "Mark selected stories as published"
 
 
 class ParticipationAdmin(admin.ModelAdmin):

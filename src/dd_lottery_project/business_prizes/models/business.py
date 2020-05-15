@@ -10,5 +10,6 @@ class Business(BaseModel):
     description = models.TextField()
     email = models.EmailField()
     address = models.TextField()
+    website = models.URLField()
 
     receit_specs = models.ForeignKey(Receit, models.CASCADE)

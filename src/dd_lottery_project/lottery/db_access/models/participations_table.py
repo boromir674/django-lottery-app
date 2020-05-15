@@ -10,11 +10,6 @@ from lottery.utils import CodeGenerator
 class ParticipationsTableManager(models.Manager):
     code_generator = CodeGenerator.from_django_settings(6, 20, seen_codes=None)
 
-    def _participation(self, code):
-        _ = Participation(code=code, state=0)
-        _.save()
-        return _
-
     def new_random(self, name, nb_codes, code_length=6, seen_codes=None):
         self.code_generator.nb_codes = nb_codes
         self.code_generator.code_length = code_length
