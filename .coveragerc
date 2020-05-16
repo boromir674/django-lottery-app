@@ -1,0 +1,35 @@
+[paths]
+source =
+   src/dd_lottery_project
+   */site-packages
+   */migrations
+[run]
+branch = true
+include =
+    src/dd_lottery_project/*
+omit =
+    # omit all migration files
+    */migrations/*
+
+source =
+    dd_lottery_project
+    business_prices
+    lottery
+    tests
+parallel = true
+
+[report]
+show_missing = true
+precision = 2
+omit = *migrations*
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    except ImportError
+    raise NotImplementedError
+    pass
+    ABCmeta
+    abstractmethod
+    abstractproperty
+    abstractclassmethod
+    warnings.warn
+

@@ -25,12 +25,7 @@ class ParticipationManager(models.Manager):
         _.save()
         return _
 
-    def random(self, code_generator, **kwargs):
-        # self.code_generator = CodeGenerator.from_django_settings(number, length, codes=[p.code for p in iter(self)])
-        number = int(kwargs.get('number', 0))
-        code_length = int(kwargs.get('length', 0))
-        self.code_generator.nb_codes = number
-        self.code_generator.code_length = code_length
+    def random(self, code_generator):
         return [self._participation(code) for code in iter(code_generator)]
 
 

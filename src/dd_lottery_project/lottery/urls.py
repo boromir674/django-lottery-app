@@ -17,9 +17,13 @@ from django.contrib import admin as dj_admin
 from django.urls import path, include
 
 from .views.winner import CodeChecker
+from .views.competition import CompetitionResource
+
 
 urlpatterns = [
-    path('', CodeChecker.as_view()),
+    path('', CodeChecker.as_view(), name='lottery_index'),
          # include('lottery.urls')),
-    path('lot_admin/', dj_admin.site.urls),
+    path('lot_admin/', dj_admin.site.urls, name='lottery_admin'),
+    path('add_random_participants/', CompetitionResource.as_view(), name='add_random_participants')
 ]
+

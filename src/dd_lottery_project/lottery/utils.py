@@ -1,6 +1,6 @@
 import attr
-
 import random
+import string
 
 
 @attr.s
@@ -13,12 +13,16 @@ class StringCreator:
         return self.digits_and_symbols(length=self.string_length)
 
     def digits_and_symbols(self, length=10):
-        return ''.join(random.choice(Str.character_set) for i in range(length))
+        return ''.join(random.choice(self.character_set) for i in range(length))
 
     @classmethod
     def from_django_settings(cls, string_length):
         from django.conf import settings
         return StringCreator(settings.PASSWORD_CHARACTERS, string_length)
+
+    @classmethod
+    def default_character_set(cls, string_length=6):
+        return StringCreator(string.ascii_lowercase + string.ascii_uppercase + '!"#$%&()*+,-./:;<=>?@[]^_|~', string_length)
 
 
 class CodeCreator:
@@ -37,7 +41,7 @@ class CodeCreator:
             if kwargs.get('init', False):
                 cls._instance.codes = codes
             else:
-                cls._instance.codes.add(codes)
+                cls._instance.codes.update(codes)
         return cls._instance
 
     def get_code(self):
@@ -129,3 +133,15 @@ class CodeGenerator:
     def from_lottery_db(cls, code_length, nb_codes, participation_model, **kwargs):
         """Returns the singleton object by initializing the 'seen' codes with the ones in the db. Pass 'update'=True to update the 'seen' codes instead of overwrite."""
         return CodeGenerator(CodeCreator.from_lottery_db(code_length, participation_model, init=not kwargs.get('update', False)), nb_codes)
+
+
+if __name__ == '__main__':
+
+    cg = CodeGenerator(CodeCreator(StringCreator.default_character_set(string_length=4)), 7)
+    codes = [c for c in cg]
+
+    assert len(codes) == 7
+    assert all(len(c) == 4 for c in codes)
+
+    print('\n'.join(codes))
+
