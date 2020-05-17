@@ -4,8 +4,8 @@ import pytest
 
 from django.urls import reverse
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth.decorators import login_required
 
+from lottery.views.winner import CodeChecker
 
 
 ####### DATA
@@ -47,6 +47,7 @@ def request_factory(rf):
 )
 def test_responses(method, request_factory, user, setup_response): # user, expected_code, expected_content, request_factory, users):
     request = request_factory(user=user, method=method)
-    response = login_required(TwoFactorAuthSetup.as_view())(request)
+    response = CodeChecker.as_view()(request)
     assert setup_response[method]['code'] == response.status_code
-    assert setup_response[method]['content'](response.content)
+    assert b'DD Lottery App' in response.content
+    # assert setup_response[method]['content'](response.content)
