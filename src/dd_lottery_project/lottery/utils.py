@@ -144,4 +144,3 @@ if __name__ == '__main__':
     assert all(len(c) == 4 for c in codes)
 
     print('\n'.join(codes))
-
