@@ -31,8 +31,8 @@ jobs:
   - stage: Check
     env: TOXENV=check
   - stage: Build_n_test
-    python: '3.7'
-    env: TOXENV=clean,py37,codecov
+    python: '3.6'
+    env: TOXENV=clean,py36,codecov
 #    install:
 #      - .travis/build-n-wheel.sh 3 6
 #  - stage: Build_n_test
