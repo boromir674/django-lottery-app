@@ -27,7 +27,7 @@ script: tox -v
 jobs:
   fail_fast: true
   include:
-  - stage: Check
+  - stage: Build_n_test
     env: TOXENV=check
   - stage: Build_n_test
     python: 3.6
