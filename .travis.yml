@@ -27,7 +27,7 @@ script: tox -v
 
 matrix:
   include:
-    - python: 3
+    - python: 3.6
       env: TOXENV=check
     - python: 3.6
       env: TOXENV=clean,py36,codecov
