@@ -21,6 +21,7 @@ before_install:
   - virtualenv --version
   - python -m pip install tox
 
+install: pip install tox-travis
 
 script: tox -v
 
