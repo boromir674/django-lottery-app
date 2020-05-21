@@ -48,12 +48,5 @@ class Competition(BaseModel):
                 return participation.state == 3
         raise MissingCodeError("The requested '%d' code does not belong in this competition.", code)
 
-    def add_random(self, code_generator):
-        _ = Participation.objects.random(code_generator)
-        assert len(_) == 20
-        for a in _:
-            print(a)
-        self.participations.add(*_)
-
 
 class MissingCodeError(Exception): pass

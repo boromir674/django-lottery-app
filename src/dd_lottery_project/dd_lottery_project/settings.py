@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'business_prizes',
     'lottery',
     # 'lottery.lottery_admin'
@@ -126,3 +127,20 @@ import string
 
 PASSWORD_CHARACTERS = string.ascii_lowercase + string.ascii_uppercase + '!"#$%&()*+,-./:;<=>?@[]^_|~'
 
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+
+    'DEFAULT_RENDERER_CLASSES': [  # renderer(template, context) -> bytes to client
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [  # parser(request, media-type) -> workable_data
+        'rest_framework.parsers.JSONParser',  # only allow json instead of default json and html form
+    ]
+
+}

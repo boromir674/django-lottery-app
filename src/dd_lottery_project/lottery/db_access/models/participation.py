@@ -13,12 +13,7 @@ class ParticipationState(Enum):
 PARTICIPATION_STATES = tuple([REGISTRATION_PENDING] + [(x.value[0], x.value[1]) for x in list(ParticipationState)])
 
 
-# cc = CodeGenerator.from_django_settings(6, 7, codes=[p.code for p in iter(Pa)])
-# code_generator = from_lottery_db(cls, code_length, nb_codes, participation_model, **kwargs)
-
 class ParticipationManager(models.Manager):
-    # code_generator = CodeGenerator.from_django_settings(6, 20)
-    # code_generator = cg
 
     def _participation(self, code):
         _ = Participation(code=code, state=0)
@@ -35,12 +30,12 @@ class Participation(models.Model):
     code = models.TextField(primary_key=True, verbose_name="This is the unique token a participant has to use, to signify he participates", help_text="Should be a 'difficult' string to guess")
     state = models.IntegerField(choices=PARTICIPATION_STATES, default=REGISTRATION_PENDING)
 
-    created = models.DateTimeField(editable=False, null=True)
-    modified = models.DateTimeField(editable=False, null=True)
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.created = timezone.now()
-        self.modified = timezone.now()
-        return super().save(*args, **kwargs)
+    # created = models.DateTimeField(editable=False, null=True, blank=True)
+    # modified = models.DateTimeField(editable=False, null=True, blank=True)
+    #
+    # def save(self, *args, **kwargs):
+    #     if not self.code:
+    #         self.created = timezone.now()
+    #     self.modified = timezone.now()
+    #     return super().save(*args, **kwargs)
 

@@ -1,8 +1,16 @@
 from django.db import models
+from django.utils import timezone
 
-from .base_model import BaseModel
 
+class Receit(models.Model):
 
-class Receit(BaseModel):
+    width = models.FloatField(name="Physical width in centimeters")
 
-    width = models.FloatField(primary_key=True, name="Physical width in centimeters")
+    # created = models.DateTimeField(editable=False)
+    # modified = models.DateTimeField(editable=False)
+    #
+    # def save(self, *args, **kwargs):
+    #     if not self.width:
+    #         self.created = timezone.now()
+    #     self.modified = timezone.now()
+    #     return super().save(*args, **kwargs)

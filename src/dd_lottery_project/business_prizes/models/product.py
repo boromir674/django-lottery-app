@@ -11,8 +11,11 @@ class Product(models.Model):
     description = models.TextField()
 
     # OPTIONAL
-    value = models.TextField(default=0.1)
-    image = models.URLField(default='')
+    value = models.TextField(default=0.1, null=True, blank=True)
+    image = models.URLField(null=True, blank=True)
 
     # FOREIGN KEY
     business = models.ForeignKey(Business, models.CASCADE)
+
+    def __str__(self):
+        return self.name

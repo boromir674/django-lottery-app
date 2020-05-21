@@ -4,7 +4,7 @@ from django.utils import timezone
 
 class BaseModel(models.Model):
 
-    class Meta:  # give a model metadata (ie enything that is not a field)
+    class Meta:  # give a model metadata (ie anything that is not a field)
         abstract = True  # If abstract = True, this model will be an abstract base class.
 
     created = models.DateTimeField(editable=False)
