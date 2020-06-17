@@ -51,3 +51,8 @@ def test_responses(method, request_factory, user, setup_response): # user, expec
     assert setup_response[method]['code'] == response.status_code
     assert b'DD Lottery App' in response.content
     # assert setup_response[method]['content'](response.content)
+
+
+def test_sanity_check(test_competition):
+    c = test_competition('Test Copetition', 30, 4, 20)
+    assert len(c.participations.all()) == 20

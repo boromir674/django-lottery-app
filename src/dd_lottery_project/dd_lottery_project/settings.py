@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'djoser',
+    'rest_framework.authtoken',
     'business_prizes',
     'lottery',
     # 'lottery.lottery_admin'
@@ -122,11 +124,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-import string
-
-PASSWORD_CHARACTERS = string.ascii_lowercase + string.ascii_uppercase + '!"#$%&()*+,-./:;<=>?@[]^_|~'
-
+# AUTH_USER_MODEL = ''
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -134,7 +132,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
-
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_RENDERER_CLASSES': [  # renderer(template, context) -> bytes to client
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -144,3 +145,10 @@ REST_FRAMEWORK = {
     ]
 
 }
+
+
+# APP SETTINGS
+
+import string
+
+PASSWORD_CHARACTERS = string.ascii_lowercase + string.ascii_uppercase + '!"#$%&()*+,-./:;<=>?@[]^_|~'
