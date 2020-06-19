@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'business_prizes',
     'lottery',
-    # 'lottery.lottery_admin'
+    'dd_app'
 ]
 
 MIDDLEWARE = [
@@ -146,6 +146,7 @@ REST_FRAMEWORK = {
 
 }
 
+AUTH_USER_MODEL = 'dd_app.DdUser'
 
 # APP SETTINGS
 
