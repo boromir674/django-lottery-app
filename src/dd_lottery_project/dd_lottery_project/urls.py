@@ -21,5 +21,4 @@ urlpatterns = [
     path('', include('lottery.urls')),
     path('business/', include('business_prizes.urls')),
     path('auth/', include('djoser.urls')),
-    # path('/admin', include('lottery_admin.urls')),
 ]
