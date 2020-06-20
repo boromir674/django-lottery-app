@@ -70,3 +70,22 @@ def test_competition(competition_maker):
         delta = datetime.timedelta(days=duration)
         return competition_maker(name, now, now + delta, code_length, nb_codes)
     return _test_competition
+
+
+# Test clients
+
+@pytest.fixture
+def clients(client, business_client, admin_client):
+    return {
+        'anonymous': client,
+        'business': business_client,
+        'admin': admin_client
+    }
+
+@pytest.fixture
+def business_client(client, django_user_model):
+    username = "greek_business"
+    password = "strong_password"
+    django_user_model.objects.create_user(username=username, password=password)
+    client.login(username=username, password=password)
+    return client
