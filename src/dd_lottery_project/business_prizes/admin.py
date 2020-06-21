@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class BusinessAdmin(admin.ModelAdmin):
     model = Business
-    list_display = ('name', 'description', 'email', 'address', 'website', 'receit')
+    list_display = ('name', 'user', 'description', 'email', 'address', 'website', 'receit')
 
     def receit(self, obj):
         try:
@@ -21,8 +21,7 @@ class ProductAdmin(admin.ModelAdmin):
     model = Product
     list_display = ('name', 'description', 'value', 'business')
 
-
-
+ 
 class ReceitAdmin(admin.ModelAdmin):
     model = Receit
     list_display = ('width', 'cnt', 'pct')
