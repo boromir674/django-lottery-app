@@ -3,8 +3,7 @@ from django.shortcuts import render, redirect, reverse
 
 from lottery.forms.competition_form import AddParticipationsForm
 from lottery.utils import CodeGenerator
-from ..db_access.models.competition import Competition
-from ..db_access.models.participation import Participation
+from participation import Participation
 
 
 class CompetitionResource(View):

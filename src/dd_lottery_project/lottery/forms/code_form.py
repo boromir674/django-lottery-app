@@ -1,9 +1,5 @@
 from django import forms
 
-from ..db_access.models.competition import Competition
-
-from ..db_access.models.participations_table import ParticipationsTable
-
 
 class ParticipationCodeForm(forms.Form):
     participation_code = forms.CharField(label='Your code', max_length=6)

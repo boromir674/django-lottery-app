@@ -1,4 +1,7 @@
+from rest_framework.reverse import reverse
 import pytest
+from lottery.models.participation import ParticipationState
+
 
 @pytest.fixture
 def bussiness_users(django_user_model, businesses_data):
@@ -30,5 +33,35 @@ def products(db, businesses, products_data):
 @pytest.mark.parametrize('name, duration, code_length, nb_codes', [
     ('testauto-competition', 1, 3, 10)
 ])
-def test_endpoints(name, duration, code_length, nb_codes, businesses, products, test_competition):
+def test_endpoints(name, duration, code_length, nb_codes, businesses, products, random_participant, test_competition):
     competition = test_competition(name, duration, code_length, nb_codes)
+    assert len(competition.participations.all()) == nb_codes
+    assert all(len(x.code) == code_length for x in competition.participations.all())
+    assert all(x.state == 0 for x in competition.participations.all())
+    assert all(competition.is_belonging(x.code) for x in competition.participations.all())
+    assert all(not competition.is_participating(x.code) for x in competition.participations.all())
+    assert all(not competition.is_winning(x.code) for x in competition.participations.all())
+
+    participant = random_participant(competition)
+    code = participant.code
+
+    participant.state = 1
+    participant.save()
+    assert competition.is_participating(code)
+
+    participant.state = 2
+    participant.save()
+    assert competition.is_winning(code)
+# self.action in ('create', 'retrieve', 'update', 'partial_update')
+
+# @pytest.mark.parametrize('name, duration, code_length, nb_codes', [
+#     ('anonymous', ['list', 'retrieve']),
+#     ('business', ['list', 'retrieve']),
+#     ('admin', ['list', 'retrieve']),
+# ])
+# def test_business_permissions(name, duration, code_length, nb_codes, ):
+@pytest.mark.skip
+def test_gg(clients):
+    client = clients.anonymous
+    response = client.get(reverse('businesses'))
+    assert response.status_code == 200

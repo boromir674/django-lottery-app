@@ -29,23 +29,23 @@ class Competition(BaseModel):
 
     def is_belonging(self, code):
         """Call this method to simply check if code has been generated as part of this competition."""
-        for participation in self.participations:
+        for participation in self.participations.all():
             if code == participation.code:  # query happens here
                 return True
         return False
 
     def is_winning(self, code):
         """Call this method to check if a code is winning."""
-        for participation in self.participations:
+        for participation in self.participations.all():
             if code == participation.code:  # query happens here
-                return participation.state == 3
+                return participation.state == 2
         raise MissingCodeError("The requested '%d' code does not belong in this competition.", code)
 
     def is_participating(self, code):
         """Call this method to check if the code is flagged as confirmed to participate in the (upcoming) lottery."""
-        for participation in self.participations:
+        for participation in self.participations.all():
             if code == participation.code:  # query happens here
-                return participation.state == 3
+                return participation.state == 1
         raise MissingCodeError("The requested '%d' code does not belong in this competition.", code)
 
 

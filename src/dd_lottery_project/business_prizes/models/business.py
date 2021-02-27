@@ -14,6 +14,7 @@ class Business(BaseModel):
     objects = BusinessManager()
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # user = models.ForeignKey('auth.User', related_name='business', on_delete=models.CASCADE)
     name = models.TextField(max_length=50)
     description = models.TextField()
     email = models.EmailField()

@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.shortcuts import reverse, redirect, render
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
-from .db_access.models import *
-from .db_access.models.participation import PARTICIPATION_STATES
+from .models import *
+from .models.participation import PARTICIPATION_STATES
 from .forms.competition_form import AddParticipationsForm
 
 from lottery.utils import CodeGenerator
