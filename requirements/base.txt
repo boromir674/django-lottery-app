@@ -1,4 +1,4 @@
-django==2.2.13
+django==2.2.21
 attrs==19.3.0
 djangorestframework==3.11.0
 django-cors-headers
